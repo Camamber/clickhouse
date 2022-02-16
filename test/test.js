@@ -6,7 +6,7 @@ const _  = require('lodash');
 const https = require('https');
 const fs = require('fs');
 
-const { ClickHouse } = require('../.');
+const { ClickHouse, UInt64 } = require('../.');
 
 const database = 'test_' + _.random(1000, 100000);
 
@@ -444,7 +444,8 @@ describe('queries', () => {
 				str String,
 				arr Array(String),
 				arr2 Array(Date),
-				arr3 Array(UInt8)
+				arr3 Array(UInt8),
+				hash UInt64
 			) ENGINE=MergeTree(date, date, 8192)
 		`).toPromise();
 		expect(r).to.be.ok();
@@ -455,7 +456,8 @@ describe('queries', () => {
 				str: 'Вам, проживающим за оргией оргию,',
 				arr: [],
 				arr2: ['1915-01-02', '1915-01-03'],
-				arr3: [1,2,3,4,5]
+				arr3: [1,2,3,4,5],
+				hash: UInt64.fromString("metroHash64('hello world')")
 			},
 			
 			{
@@ -463,12 +465,14 @@ describe('queries', () => {
 				str: 'имеющим ванную и теплый клозет!',
 				arr: ['5670000000', 'asdas dasf'],
 				arr2: ['1915-02-02'],
-				arr3: []
+				arr3: [],
+				hash: UInt64.fromString("metroHash64('world hello')")
+
 			}
 		];
 		
 		const r2 = await clickhouse.insert(
-			'INSERT INTO test_array (date, str, arr, arr2, arr3)',
+			'INSERT INTO test_array (date, str, arr, arr2, arr3, hash)',
 			rows
 		).toPromise();
 		expect(r2).to.be.ok();

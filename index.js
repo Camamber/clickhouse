@@ -208,6 +208,10 @@ function encodeValue(quote, v, _format, isArray) {
 					return encodeValue(true, i, format, true);
 				}).join(',') + ']';
 			}
+
+			if (v instanceof UInt64) {
+				return v.toString();
+			}
 			
 			// TODO: tuples support
 			if (!format) {
@@ -982,6 +986,26 @@ class ClickHouse {
 	}
 }
 
+
+class UInt64 {
+    constructor(uint64Value) {
+        this.value = uint64Value;
+    }
+
+    static fromString(uint64Value) {
+        return new UInt64(uint64Value);
+    }
+
+    getValue() {
+        return this.value;
+    }
+
+    toString() {
+        return this.value;
+    }
+}
+
 module.exports = {
 	ClickHouse,
+	UInt64
 };

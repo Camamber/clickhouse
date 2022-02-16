@@ -22,4 +22,11 @@ declare module 'clickhouse' {
     exec(callback: callbackExec): void;
     stream(): Stream & WriteStream;
   }
+
+  export class UInt64 {
+    constructor(uint64Value: string);
+    getValue(): string;
+    toString(): string;
+    static fromString(uint64Value: string): UInt64
+  }
 }
